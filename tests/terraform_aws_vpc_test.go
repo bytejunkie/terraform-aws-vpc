@@ -94,7 +94,8 @@ func TestTerraformVPCWithTagsDNS(t *testing.T) {
 
 	expectedCIDRBlock := "10.0.2.0/24"
 	VPCTags := map[string]string{"environment": "development", "location": "eu-west-2"}
-	enableDNSSsupport := "false"
+	enableDNSSupport := "false"
+	// enableClassiclink := "true"
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		// The path to where our Terraform code is located
@@ -104,7 +105,8 @@ func TestTerraformVPCWithTagsDNS(t *testing.T) {
 		Vars: map[string]interface{}{
 			"cidr_block":         expectedCIDRBlock,
 			"tags":               VPCTags,
-			"enable_dns_support": enableDNSSsupport,
+			"enable_dns_support": enableDNSSupport,
+			// "enable_classiclink": enableClassiclink,
 		},
 
 		// Variables to pass to our Terraform code using -var-file options
@@ -126,6 +128,7 @@ func TestTerraformVPCWithTagsDNS(t *testing.T) {
 	actualCIDRBlock := terraform.Output(t, terraformOptions, "cidr_block")
 	actualVPCTags := terraform.Output(t, terraformOptions, "tags")
 	actualenablednssupport := terraform.Output(t, terraformOptions, "enable_dns_support")
+	// actualEnableClassiclink := terraform.Output(t, terraformOptions, "enable_classiclink")
 
 	// website::tag::3::Check the output against expected values.
 	// Verify we're getting back the outputs we expect
@@ -133,4 +136,5 @@ func TestTerraformVPCWithTagsDNS(t *testing.T) {
 	assert.Contains(t, actualVPCTags, "environment")
 	assert.Contains(t, actualVPCTags, "location")
 	assert.Equal(t, "false", actualenablednssupport)
+	// assert.Equal(t, "true", actualEnableClassiclink)
 }
